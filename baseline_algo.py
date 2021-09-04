@@ -100,6 +100,25 @@ def one_based_connected(id: int, topn: int):
     obj = id2obj[id]
     characts = get_characts(obj)
     candidates = {}
+
+    for category in top8.get_categories(obj['Категория']):
+        category_candidates = categories[category]
+        for cand in category_candidates:
+            connected_characts = get_characts(id2obj[cand])
+            candidates[cand] = (len(characts & connected_characts)) ** (0.5) * 1 / 8
+
+    for category in top5.get_categories(obj['Категория']):
+        category_candidates = categories[category]
+        for cand in category_candidates:
+            connected_characts = get_characts(id2obj[cand])
+            candidates[cand] = (len(characts & connected_characts)) ** (0.5) * 1 / 5
+
+    for category in top3.get_categories(obj['Категория']):
+        category_candidates = categories[category]
+        for cand in category_candidates:
+            connected_characts = get_characts(id2obj[cand])
+            candidates[cand] = (len(characts & connected_characts)) ** (0.5) * 1 / 3
+
     if not pd.isna(obj['Другая продукция в контрактах']) and len(obj['Другая продукция в контрактах'].strip()) > 0:
         st_others = obj['Другая продукция в контрактах']
         edge_inda = -st_others[::-1].index("}")
@@ -117,26 +136,9 @@ def one_based_connected(id: int, topn: int):
             except KeyError:
                 pass
 
-    for category in top3.get_categories(obj['Категория']):
-        category_candidates = categories[category]
-        for cand in category_candidates:
-            connected_characts = get_characts(id2obj[cand])
-            candidates[cand] = (len(characts & connected_characts)) ** (0.5) * 1 / 3
-
-    for category in top5.get_categories(obj['Категория']):
-        category_candidates = categories[category]
-        for cand in category_candidates:
-            connected_characts = get_characts(id2obj[cand])
-            candidates[cand] = (len(characts & connected_characts)) ** (0.5) * 1 / 5
-
-    for category in top8.get_categories(obj['Категория']):
-        category_candidates = categories[category]
-        for cand in category_candidates:
-            connected_characts = get_characts(id2obj[cand])
-            candidates[cand] = (len(characts & connected_characts)) ** (0.5) * 1 / 8
-
     sorted_candidates = sorted(candidates, key=lambda x: -candidates[x])
     return sorted_candidates[:topn]
+
 
 # USAGE EXAMPLE
 ids = one_based_connected(34172198, 10)
