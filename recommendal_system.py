@@ -90,29 +90,32 @@ class Skynet():
         for category in self.top8[obj['Категория']]:
             category_candidates = self.categories[category]
             for cand in category_candidates:
-                try:
-                    connected_characts = self.get_characts(self.id2obj[cand])
-                except KeyError:
-                    connected_characts = set()
-                candidates[cand] = math.log(max(1, len(characts & connected_characts))) / 8
+                if cand != id:
+                    try:
+                        connected_characts = self.get_characts(self.id2obj[cand])
+                    except KeyError:
+                        connected_characts = set()
+                    candidates[cand] = math.log(max(1, len(characts & connected_characts))) / 8
 
         for category in self.top5[obj['Категория']]:
             category_candidates = self.categories[category]
             for cand in category_candidates:
-                try:
-                    connected_characts = self.get_characts(self.id2obj[cand])
-                except KeyError:
-                    connected_characts = set()
-                candidates[cand] = math.log(max(1, len(characts & connected_characts))) / 5
+                if cand != id:
+                    try:
+                        connected_characts = self.get_characts(self.id2obj[cand])
+                    except KeyError:
+                        connected_characts = set()
+                    candidates[cand] = math.log(max(1, len(characts & connected_characts))) / 5
 
         for category in self.top3[obj['Категория']]:
             category_candidates = self.categories[category]
             for cand in category_candidates:
-                try:
-                    connected_characts = self.get_characts(self.id2obj[cand])
-                except KeyError:
-                    connected_characts = set()
-                candidates[cand] = math.log(max(1, len(characts & connected_characts))) / 3
+                if cand != id:
+                    try:
+                        connected_characts = self.get_characts(self.id2obj[cand])
+                    except KeyError:
+                        connected_characts = set()
+                    candidates[cand] = math.log(max(1, len(characts & connected_characts))) / 3
 
         if not pd.isna(obj['Другая продукция в контрактах']) and len(obj['Другая продукция в контрактах'].strip()) > 0:
             st_others = obj['Другая продукция в контрактах']
@@ -262,7 +265,6 @@ class Skynet():
                 go_set.add(good)
                 unique.append(good)
         return unique
-
 # USAGE EXAMPLE
 # predictor = Skynet()
 # supplement = predictor.recommend_supplement([1257331, 1205312, 1228720])
